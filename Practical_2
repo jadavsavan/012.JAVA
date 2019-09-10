@@ -1,0 +1,121 @@
+java file
+JDBC_Project1.java
+-----------------------------------------------------------------------------------------
+package one;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Scanner;
+/* @author JADAV SAVAN   */
+public class JDBC_Project1 {
+    public static void main(String[] args) {
+      
+        int ch=1,tr=0,ac=1;
+        Scanner input = new Scanner(System.in);
+        try{
+        Connection connection = DriverManager.getConnection("jdbc:derby://localhost:1527/STUDENT_DATA","Student_Data","Student_Data"); 
+        Statement stm = connection.createStatement();
+        ResultSet rs ;
+        lable:
+        do{
+            System.out.println("+-------------------------------------------+");
+            System.out.println("|  press 1 for create Account               |\n"
+                           +   "|  press 2 for display Balencein In Account |\n"
+                           +   "|  press 3 for Upadate Mobile_Number        |\n"
+                           +   "|  press 4 for Delete Account               |\n"
+                           +   "|  press 5 for Add Amount in Account        |\n"
+                           +   "|  press 6 for Get Amount from Account      |\n"
+                           +   "|  Enter 0 for Exit                         |\n"
+                           +   "|  Enter your choice:                       |");
+            System.out.println("+-------------------------------------------+");
+            ch = input.nextInt();
+            switch(ch){
+                case 1:
+                    String Name,Mobile,Act,Acn;
+                    int Amount=0;
+                    System.out.println("Enter name:");
+                    Name=input.next();
+                    System.out.println("Account type ");
+                    Act=input.next();
+                    System.out.println("Enter Mobile_Number:");
+                    Mobile=input.next();
+                    System.out.println("Enter Starting Amount");
+                    Amount=input.nextInt();
+                    stm.executeUpdate("insert into STUDENT_DATA.BANKAPK values("+(ac)+",'"+Name+"','"+Act+"','"+Mobile+"',"+Amount+")");
+                    System.out.println("Account Created Successfully:\nAnd Your Account Number is = "+(ac++));
+                    break;
+                case 2:
+                    rs = stm.executeQuery("SELECT * FROM STUDENT_DATA.BANKAPK");
+                    while(rs.next()){
+                    System.out.println("[{Account_Holder_Name = "+rs.getString(2)+"}\t{Mobile_Number = "+rs.getString(4)+"}\t{Account_Type = "+rs.getString(3)+"}\t{Account_Number = "+rs.getString(1)+"}\t{Amount = "+rs.getInt(5)+"}]\n");
+                    }
+                    System.out.println("Data Printed Successfully : ");
+                    break;
+                case 3:
+                    int Account_No;
+                    String New_Mobile_Number;
+                    System.out.println("Enter Account_Number");
+                    Account_No=input.nextInt();
+                    
+                    System.out.println("Enter Mobile_Number");
+                    New_Mobile_Number=input.next();
+                    stm.executeUpdate("UPDATE STUDENT_DATA.BANKAPK SET MOBILE_NUMBER='"+New_Mobile_Number+"' where ACCOUNT_NUMBER="+Account_No+"");
+                    System.out.println("Mobile_Number change successfully:");
+                    break;
+                case 4:
+                    int Delete;
+                    System.out.println("Enter Account_Number:");
+                    Delete=input.nextInt();
+                    stm.executeUpdate("DELETE from STUDENT_DATA.BANKAPK where ACCOUNT_NUMBER="+Delete+"");
+                    System.out.println("Account Deleted Successfully");
+                    break;
+                case 5:
+                    int ac_no,amount;
+                    
+                    System.out.println("Enter Account_Number");
+                    ac_no=input.nextInt();
+                    int cr=0;
+                    System.out.println("Enter Amount");
+                    amount=input.nextInt();
+                    rs = stm.executeQuery("SELECT * FROM STUDENT_DATA.BANKAPK where ACCOUNT_NUMBER = "+ac_no);
+                    while(rs.next()){
+                    cr=rs.getInt(5);}
+                    stm.executeUpdate("UPDATE STUDENT_DATA.BANKAPK SET BALANCE="+(amount+cr)+" where ACCOUNT_NUMBER="+ac_no);
+                    System.out.println("Amount Added successfully:");
+                    break;
+                case 6:
+                    int ac_no1,amount1,cr1=0;
+                    
+                    System.out.println("Enter Account_Number");
+                    ac_no1=input.nextInt();
+                    
+                    System.out.println("Enter Amount");
+                    amount1=input.nextInt();
+                    rs = stm.executeQuery("SELECT * FROM STUDENT_DATA.BANKAPK where ACCOUNT_NUMBER = "+ac_no1);
+                    while(rs.next()){
+                    cr1=rs.getInt(5);}
+                    int cr3=cr1-amount1;
+                    if(cr3<0){System.out.println("your balance is low"); break;}
+                    stm.executeUpdate("UPDATE STUDENT_DATA.BANKAPK SET BALANCE="+(cr3)+" where ACCOUNT_NUMBER="+ac_no1+"");
+                    System.out.println("Transaction Compleated successfully:");
+                    break;
+                    
+                case 0:
+                    break lable;
+                default:
+                   System.out.println("Wrong input:");
+                   tr++;
+                   if(tr==3){
+                      System.out.println("You Enter Wrong input Maximum time:\n"
+                                       + "program terminate automatically");
+                      break lable;  
+                   }
+            }
+        }while(true);
+        }catch(Exception e) {
+        System.out.println("please check your code in code Exception is Occure \n"+e);
+        }
+}
+}
