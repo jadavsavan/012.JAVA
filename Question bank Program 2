@@ -1,0 +1,65 @@
+  
+HTML File
+Pr-2.html
+---------------------------------------------------------------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mark sheet</title>
+    </head>
+    <body>
+        <form action="Generate" method="post">
+            <center>
+                <input type="text" name="PRN" required>
+                <input type="submit" value="OK">
+            </center>
+        </form>
+    </body>
+</html>
+
+--------------------------------------------------------------------------------------------------------------------------------------
+JAVA file 1
+Generate.java
+--------------------------------------------------------------------------------------------------------------------------------------
+package Database;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+/*     @author JADAV SAVAN     */
+@WebServlet("/Generate")
+public class Generate extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException{
+         PrintWriter out = response.getWriter();
+         try{
+         
+          Class.forName("com.mysql.jdbc.Driver");
+          Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3310/Mini_Project","SAVAN","SAVAN");
+          if(request.getParameter("PRN").trim() == "")
+          {
+             response.sendRedirect("pr2.html");
+          }else{
+             String PRN = request.getParameter("PRN"); 
+             ResultSet rs ; 
+             Statement stm1 = con.createStatement();
+             rs = stm1.executeQuery("SELECT * FROM `hibernate`.`par2` where PRN = "+PRN);
+             out.println("PRN\tSubject-1\tSubject-2\tSubject-3");
+             while(rs.next()){
+                out.println(rs.getString(1)+"\t"+rs.getString(2)+"\t\t"+rs.getString(3)+"\t\t"+rs.getString(4)); 
+             }
+          }
+        }catch(Exception e){
+            out.println("Exception : "+e);
+        }
+    }
+  
+}
