@@ -1,0 +1,75 @@
+HTML File
+index.html
+---------------------------------------------------------------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Session Management</title>
+    </head>
+    <body>
+        <form action="setin">
+            <input type="text" name="name" placeholder="Enter name">
+            <input type="submit" value="Go">
+        </form>
+    </body>
+</html>
+--------------------------------------------------------------------------------------------------------------------------------------
+JAVA file 1
+Pr_1.java
+--------------------------------------------------------------------------------------------------------------------------------------
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+@WebServlet(urlPatterns = {"/setin"})
+public class Pr_1 extends HttpServlet {
+        protected void service(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
+        String name0="";
+        HttpSession session = request.getSession();
+        if(session.getAttribute("name") == null)
+        {
+            String name = request.getParameter("name");
+            session.setAttribute("name",name);
+            out.println("<center><b>Wel-Come\nUsing First Time:</b></center>");
+        }else{
+           String name = session.getAttribute("name").toString();
+           name0=name;
+           out.println("<center><b>Wel-Come\nAgain "+name+"</b></center>");
+        } 
+         out.println("<center><b><a href=\"servlet2\">Go to next page"+name0+"</a></b></center>");
+            
+       
+   }
+}
+------------------------------------------------------------------------------------------------------------------------------------
+JAVA file 2
+servlet2.java
+-------------------------------------------------------------------------------------------------------------------------------------
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+@WebServlet(urlPatterns = {"/servlet2"})
+public class servlet2 extends HttpServlet {
+
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        PrintWriter out = response.getWriter();
+        HttpSession session = request.getSession(false);
+        String name = session.getAttribute("name").toString();
+        
+        out.println("hello"+name);
+        
+        }
+}
+----------------------------------------------------------------------------------------------------------------------------------
