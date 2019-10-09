@@ -21,7 +21,7 @@ Prime.jsp
         <input type="submit" value="OK"><br><br>
         </form>
         <%
-        if(request.getParameter("num1") == null || request.getParameter("num1") == null){
+        if(request.getParameter("num1") == null || request.getParameter("num2") == null){
             out.print("<b>Enter Number</b>");
         }else{
           int low = Integer.parseInt(request.getParameter("num1"));
